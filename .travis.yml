@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t jhillieritrs/complex-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true jhillieritrs/complex-test npm test
+
+after_success:
+    - docker build -t jhillieritrs/complex-client ./client
+    - docker build -t jhillieritrs/complex-nginx ./nginx
+    - docker build -t jhillieritrs/complex-server ./server
+    - docker build -t jhillieritrs/complex-worker ./worker
+# Log in to docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+    - docker push jhillieritrs/complex-client
+    - docker push jhillieritrs/complex-nginx
+    - docker push jhillieritrs/complex-server
+    - docker push jhillieritrs/complex-worker
