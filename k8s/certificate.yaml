@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+    name: feijoasoftworks-com-tls
+spec:
+    secretName: feijoasoftworks-com
+    issuerRef:
+        name: letsencrypt-prod
+        kind: ClusterIssuer
+    commonName: feijoasoftworks.com
+    dnsNames:
+        - feijoasoftworks.com
+        - www.feijoasoftworks.com
+    acme:
+        config:
+            - http01:
+                ingressClass: nginx
+              domains:
+                - feijoasoftworks.com
+                - www.feijoasoftworks.com
